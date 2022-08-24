@@ -5,6 +5,7 @@ import { addHours } from "date-fns";
 
 import { Navbar, CalendarEvent } from "../";
 import { localizer, getMessagesES } from "../../helpers";
+import { useState } from "react";
 
 const events = [
   {
@@ -20,9 +21,14 @@ const events = [
   },
 ];
 
-export const CalendarPage = () => {
-  const eventStyleGetter = (event, start, end, isSelected) => {
+const init = () => {
+  return localStorage.getItem("lastView") || "month";
+};
 
+export const CalendarPage = () => {
+  const [lastview] = useState(init);
+
+  const eventStyleGetter = (event, start, end, isSelected) => {
     const style = {
       backgroundColor: "#347CF7",
       borderRadius: "0px",
@@ -34,6 +40,19 @@ export const CalendarPage = () => {
       style,
     };
   };
+
+  const onDoubleClick = (event) => {
+    console.log({ doubleClick: event });
+  };
+
+  const onSelect = (event) => {
+    console.log({ click: event });
+  };
+
+  const onViewChanged = (event) => {
+    localStorage.setItem("lastView", event);
+  };
+
   return (
     <>
       <Navbar />
@@ -41,6 +60,7 @@ export const CalendarPage = () => {
         culture="es"
         localizer={localizer}
         events={events}
+        defaultView={lastview}
         startAccessor="start"
         endAccessor="end"
         style={{ height: "calc( 100vh - 80px )" }}
@@ -49,6 +69,9 @@ export const CalendarPage = () => {
         components={{
           event: CalendarEvent,
         }}
+        onDoubleClickEvent={onDoubleClick}
+        onSelectEvent={onSelect}
+        onView={onViewChanged}
       />
     </>
   );
