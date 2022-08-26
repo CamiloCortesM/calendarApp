@@ -73,6 +73,7 @@ export const CalendarModal = () => {
           <label>Fecha y hora fin</label>
           {/* <input className="form-control" placeholder="Fecha inicio" /> */}
           <DatePicker
+            minDate={startDate}
             selected={endDate}
             className="form-control"
             onChange={(date) => onDateChanged(date, "endDate")}
