@@ -68,7 +68,6 @@ export const CalendarModal = () => {
     );
 
     if (isNaN(difference) || difference <= 0) {
-      // console.log("Error en fechas");
       Swal.fire("Fechas incorretas", "Resvisar las fechas ingresadas", "error");
       return;
     }
@@ -78,7 +77,7 @@ export const CalendarModal = () => {
 
     console.log(formValues);
 
-    // TODO:
+    //TODO
     //cerrar modal
     //Remover errores en pantalla
   };
