@@ -25,10 +25,8 @@ const customStyles = {
 Modal.setAppElement("#root");
 
 export const CalendarModal = () => {
-  const { activeEvent } = useCalendarStore();
-
+  const { activeEvent, startSavingEvent } = useCalendarStore();
   const { isDateModalOpen, closeDateModal } = useUiStore();
-
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   const [formValues, setFormValues] = useState({
@@ -67,28 +65,24 @@ export const CalendarModal = () => {
     });
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
     setFormSubmitted(true);
 
-    const difference = differenceInSeconds(
-      formValues.end,
-      formValues.start
-    );
-    console.log(difference);
+    const difference = differenceInSeconds(formValues.end, formValues.start);
     if (isNaN(difference) || difference <= 0) {
       Swal.fire("Fechas incorretas", "Resvisar las fechas ingresadas", "error");
       return;
     }
     // if (formValues.startDate > formValues.endDate) return;
-    if (formValues.title.length < 0) return;
-    if (formValues.notes.length < 0) return;
-
+    if (formValues.title.length < 1) return;
+    if (formValues.notes.length < 1) return;
+    console.log("a");
     console.log(formValues);
 
-    //TODO
-    //cerrar modal
-    //Remover errores en pantalla
+    await startSavingEvent(formValues);
+    closeDateModal();
+    setFormSubmitted(false);
   };
   return (
     <Modal
