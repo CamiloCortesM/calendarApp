@@ -32,8 +32,8 @@ export const CalendarModal = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   const [formValues, setFormValues] = useState({
-    title: "Camilo",
-    notes: "Cortes",
+    title: "",
+    notes: "",
     start: new Date(),
     end: addHours(new Date(), 2),
   });
@@ -44,11 +44,9 @@ export const CalendarModal = () => {
   }, [formValues.title, formSubmitted]);
 
   useEffect(() => {
-
-    if(activeEvent !== null) {
-      setFormValues({...activeEvent})
+    if (activeEvent !== null) {
+      setFormValues({ ...activeEvent });
     }
- 
   }, [activeEvent]);
 
   const onCloseModal = () => {
@@ -74,10 +72,10 @@ export const CalendarModal = () => {
     setFormSubmitted(true);
 
     const difference = differenceInSeconds(
-      formValues.endDate,
-      formValues.startDate
+      formValues.end,
+      formValues.start
     );
-
+    console.log(difference);
     if (isNaN(difference) || difference <= 0) {
       Swal.fire("Fechas incorretas", "Resvisar las fechas ingresadas", "error");
       return;
