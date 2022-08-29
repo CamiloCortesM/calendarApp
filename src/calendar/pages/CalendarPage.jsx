@@ -17,7 +17,7 @@ const init = () => {
 };
 
 export const CalendarPage = () => {
-  const { events, setActiveEvent, hasEventSelected } = useCalendarStore();
+  const { events, setActiveEvent } = useCalendarStore();
   const { openDateModal } = useUiStore();
 
   const [lastview] = useState(init);
