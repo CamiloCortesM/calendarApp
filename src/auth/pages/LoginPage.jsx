@@ -16,7 +16,7 @@ const registerFormFields = {
 };
 
 export const LoginPage = () => {
-  const { startLogin, errorMessage } = useAuthStore();
+  const { startLogin, startRegister, errorMessage } = useAuthStore();
 
   const {
     loginEmail,
@@ -39,11 +39,23 @@ export const LoginPage = () => {
 
   const registerSubmit = (event) => {
     event.preventDefault();
-    console.log({
-      registerName,
-      registerEmail,
-      registerPassword,
-      registerPassword2,
+    if (registerPassword !== registerPassword2) {
+      Swal.fire("Error en registro", "Contraseñas no son iguales", "error");
+      return;
+    }
+    console.log(registerPassword.length)
+    if (registerPassword.length < 6) {
+      Swal.fire(
+        "Error en registro",
+        "La contraseña debe tener minimo 6 carateres",
+        "error"
+      );
+      return;
+    }
+    startRegister({
+      name: registerName,
+      email: registerEmail,
+      password: registerPassword,
     });
   };
 
