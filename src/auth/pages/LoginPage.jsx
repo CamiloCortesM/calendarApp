@@ -43,11 +43,10 @@ export const LoginPage = () => {
       Swal.fire("Error en registro", "Contraseñas no son iguales", "error");
       return;
     }
-    console.log(registerPassword.length)
     if (registerPassword.length < 6) {
       Swal.fire(
         "Error en registro",
-        "La contraseña debe tener minimo 6 carateres",
+        "La contraseña debe tener minimo 6 caracteres",
         "error"
       );
       return;
