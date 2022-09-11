@@ -10,6 +10,7 @@ import {
 export const useCalendarStore = () => {
   const dispatch = useDispatch();
   const { events, activeEvent } = useSelector((state) => state.calendar);
+  const { user } = useSelector((state) => state.auth);
 
   const setActiveEvent = (calendarEvent) => {
     dispatch(onSetActiveEvent(calendarEvent));
@@ -26,7 +27,13 @@ export const useCalendarStore = () => {
           ...calendarEvent,
         });
         console.log(data);
-        dispatch(onAddNewEvent({ ...calendarEvent, id: data.event.id }));
+        dispatch(
+          onAddNewEvent({
+            ...calendarEvent,
+            id: data.event.id,
+            user,
+          })
+        );
       } catch (error) {
         console.log(error);
       }
