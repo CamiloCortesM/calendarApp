@@ -2,14 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 import { addHours } from "date-fns";
 
 const tempEvent = {
-  id: new Date().getTime(),
+  _id: new Date().getTime(),
   title: "Cumplaños del jefe",
   notes: "Hay que comprar el pastel",
   start: new Date(),
   end: addHours(new Date(), 2),
   bgColor: "#fafafa",
   user: {
-    id: "123",
+    _id: "123",
     name: "Camilo",
   },
 };
@@ -21,6 +21,10 @@ export const calendarSlice = createSlice({
     activeEvent: null,
   },
   reducers: {
+    onAddInitialEvents:(state,{payload})=>{
+      state.events = payload;
+      state.activeEvent = null;
+    },
     onSetActiveEvent: (state, { payload }) => {
       state.activeEvent = payload;
     },
@@ -49,5 +53,5 @@ export const calendarSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { onSetActiveEvent, onAddNewEvent, onUpdateEvent, onDeleteEvent } =
+export const { onSetActiveEvent, onAddNewEvent, onUpdateEvent, onDeleteEvent,onAddInitialEvents } =
   calendarSlice.actions;
