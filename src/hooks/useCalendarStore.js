@@ -30,6 +30,7 @@ export const useCalendarStore = () => {
         dispatch(
           onUpdateEvent({
             ...calendarEvent,
+            user,
           })
         );
         return;
