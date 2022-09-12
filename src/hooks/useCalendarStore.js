@@ -33,6 +33,7 @@ export const useCalendarStore = () => {
             user,
           })
         );
+        Swal.fire("Edicion", "Se ha Editado correctamente", "success");
         return;
       }
       const { data } = await calendarApi.post("/events", {
@@ -46,14 +47,21 @@ export const useCalendarStore = () => {
           user,
         })
       );
+      Swal.fire("Creacion", "Se ha creado correctamente", "success");
     } catch (error) {
       Swal.fire("Error en el Evento", error.response.data?.msg, "error");
     }
   };
 
   const startDeletingEvent = async () => {
+    try {
+      await calendarApi.delete(`/events/${activeEvent.id}`);
+      dispatch(onDeleteEvent());
+      Swal.fire("Eliminacion", "Se ha eliminado correctamente", "success");
+    } catch (error) {
+      Swal.fire("Error en la Eliminacion", error.response.data?.msg, "error");
+    }
     //Todo: llegar al backend
-    dispatch(onDeleteEvent());
   };
 
   const startLoadingEvents = async () => {
