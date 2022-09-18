@@ -339,6 +339,6 @@ describe("test in useCalendarStore", () => {
       await result.current.startLoadingEvents();
     });
 
-    console.log(result.current);
+    expect(result.current.events.length).toBe(0)
   });
 });
