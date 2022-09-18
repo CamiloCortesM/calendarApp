@@ -182,4 +182,27 @@ describe("test in useAuthStore", () => {
       user: { name: "Test User", uid: "63229d5760e3b63231763bd3" },
     });
   });
+
+  test("checkAuthToken must fail token", async () => {
+    const token = "asdasdasudya7yidushiatisadusadyy";
+    localStorage.setItem("token", token);
+    const mockStore = getMockStore({ ...initialState });
+    const { result } = renderHook(() => useAuthStore(), {
+      wrapper: ({ children }) => (
+        <Provider store={mockStore}>{children}</Provider>
+      ),
+    });
+
+    await act(async () => {
+      await result.current.checkAuthToken();
+    });
+
+    const { errorMessage, user, status } = result.current;
+    expect({ errorMessage, user, status }).toEqual({
+      errorMessage: undefined,
+      user: {},
+      status: "not-authenticated",
+    });
+    expect(localStorage.getItem("token")).toBe(null);
+  });
 });
