@@ -20,10 +20,8 @@ export const useCalendarStore = () => {
   };
 
   const startSavingEvent = async (calendarEvent) => {
-    //TODO:Update event
     try {
       if (calendarEvent.id) {
-        //actualizando
         await calendarApi.put(`/events/${calendarEvent.id}`, {
           ...calendarEvent,
         });
@@ -61,7 +59,6 @@ export const useCalendarStore = () => {
     } catch (error) {
       Swal.fire("Error en la Eliminacion", error.response.data?.msg, "error");
     }
-    //Todo: llegar al backend
   };
 
   const startLoadingEvents = async () => {
