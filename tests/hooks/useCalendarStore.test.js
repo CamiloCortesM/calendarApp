@@ -6,6 +6,7 @@ import { calendarApi } from "../../src/api";
 import { useCalendarStore } from "../../src/hooks";
 import { authSlice, calendarSlice } from "../../src/store";
 import {
+  calendarWithActiveEventState,
   calendarWithEventsState,
   events,
   initialState,
@@ -81,7 +82,7 @@ describe("test in useCalendarStore", () => {
     const newEvent = {
       start: new Date("2022-09-08 13:00:00"),
       end: new Date("2022-09-08 15:00:00"),
-      title: "Cumplaños del Astrid",
+      title: "Cumplaños de Astrid",
       notes: "Alguna nota de Astrid",
     };
 
@@ -152,7 +153,7 @@ describe("test in useCalendarStore", () => {
       id: "1",
       start: new Date("2022-09-08 13:00:00"),
       end: new Date("2022-09-08 15:00:00"),
-      title: "Cumplaños del Astrid",
+      title: "Cumplaños de Astrid",
       notes: "Alguna nota de Astrid",
     };
 
@@ -217,5 +218,127 @@ describe("test in useCalendarStore", () => {
       expect.any(String),
       "error"
     );
+  });
+
+  test("startDeletingEvent must delete event", async () => {
+    const mockStore = getMockStore({ ...calendarWithActiveEventState });
+    const { result } = renderHook(() => useCalendarStore(), {
+      wrapper: ({ children }) => (
+        <Provider store={mockStore}>{children}</Provider>
+      ),
+    });
+
+    const spy = jest.spyOn(calendarApi, "delete").mockReturnValue({
+      data: {
+        ok: true,
+        event: {
+          ...events[0],
+        },
+      },
+    });
+
+    await act(async () => {
+      await result.current.startDeletingEvent();
+    });
+
+    expect(result.current.events.length).toBe(events.length - 1);
+    expect(Swal.fire).toHaveBeenCalledTimes(1);
+    expect(Swal.fire).toHaveBeenCalledWith(
+      "Eliminacion",
+      "Se ha eliminado correctamente",
+      "success"
+    );
+    spy.mockRestore();
+  });
+
+  test("startDeletingEvent must fail delete", async () => {
+    const mockStore = getMockStore({ ...calendarWithActiveEventState });
+    const { result } = renderHook(() => useCalendarStore(), {
+      wrapper: ({ children }) => (
+        <Provider store={mockStore}>{children}</Provider>
+      ),
+    });
+
+    await act(async () => {
+      await result.current.startDeletingEvent();
+    });
+
+    expect(Swal.fire).toHaveBeenCalledTimes(1);
+    expect(Swal.fire).toHaveBeenCalledWith(
+      "Error en la Eliminacion",
+      expect.any(String),
+      "error"
+    );
+  });
+
+  test("startLoadingEvents must loading events", async () => {
+    const getevents = [
+      {
+        id: "1",
+        start: "2022-10-21 13:00:00",
+        end: "2022-10-21 15:00:00",
+        title: "testing 1",
+        notes: "Alguna nota",
+      },
+      {
+        id: "2",
+        start: "2022-11-09 13:00:00",
+        end: "2022-11-09 15:00:00",
+        title: "testing 2",
+        notes: "Alguna nota de Melissa",
+      },
+    ];
+
+    const mockStore = getMockStore({ ...initialState });
+    const { result } = renderHook(() => useCalendarStore(), {
+      wrapper: ({ children }) => (
+        <Provider store={mockStore}>{children}</Provider>
+      ),
+    });
+
+    const spy = jest.spyOn(calendarApi, "get").mockReturnValue({
+      data: {
+        ok: true,
+        events: getevents,
+      },
+    });
+
+    await act(async () => {
+      await result.current.startLoadingEvents();
+    });
+
+    expect(result.current.events).toEqual([
+      {
+        id: "1",
+        start: expect.any(Object),
+        end: expect.any(Object),
+        title: "testing 1",
+        notes: "Alguna nota",
+      },
+      {
+        id: "2",
+        start: expect.any(Object),
+        end: expect.any(Object),
+        title: "testing 2",
+        notes: "Alguna nota de Melissa",
+      },
+    ]);
+
+    spy.mockRestore();
+  });
+
+  test("startLoadingEvents must fail", async () => {
+    const mockStore = getMockStore({ ...initialState });
+    const { result } = renderHook(() => useCalendarStore(), {
+      wrapper: ({ children }) => (
+        <Provider store={mockStore}>{children}</Provider>
+      ),
+    });
+
+    await act(async () => {
+      await result.current.startLoadingEvents();
+    });
+
+    console.log(result.current);
   });
 });
