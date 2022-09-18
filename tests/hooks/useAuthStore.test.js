@@ -231,6 +231,5 @@ describe("test in useAuthStore", () => {
       errorMessage: undefined,
       status: "not-authenticated",
     });
-    expect(mockedUseDispatch).toHaveBeenCalled();
   });
 });
