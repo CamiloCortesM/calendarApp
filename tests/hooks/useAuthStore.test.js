@@ -4,7 +4,11 @@ import { Provider } from "react-redux";
 import { calendarApi } from "../../src/api";
 import { useAuthStore } from "../../src/hooks";
 import { authSlice } from "../../src/store";
-import { initialState, notAuthenticatedState } from "../fixtures/authStates";
+import {
+  initialState,
+  notAuthenticatedState,
+  authenticatedState,
+} from "../fixtures/authStates";
 import { testUserCredentials } from "../fixtures/testUser";
 
 const getMockStore = (initialState) => {
@@ -204,5 +208,29 @@ describe("test in useAuthStore", () => {
       status: "not-authenticated",
     });
     expect(localStorage.getItem("token")).toBe(null);
+  });
+
+  test("startLogout must clear localstorage and logout", async () => {
+    const token = "asdasdasudya7yidushiatisadusadyy";
+    localStorage.setItem("token", token);
+    const mockStore = getMockStore({ ...authenticatedState });
+    const { result } = renderHook(() => useAuthStore(), {
+      wrapper: ({ children }) => (
+        <Provider store={mockStore}>{children}</Provider>
+      ),
+    });
+
+    await act(async () => {
+      await result.current.startLogout();
+    });
+
+    const { user, errorMessage, status } = result.current;
+    expect(localStorage.getItem("token")).toBe(null);
+    expect({ user, errorMessage, status }).toEqual({
+      user: {},
+      errorMessage: undefined,
+      status: "not-authenticated",
+    });
+    expect(mockedUseDispatch).toHaveBeenCalled();
   });
 });
