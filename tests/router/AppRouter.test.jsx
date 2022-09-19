@@ -1,9 +1,14 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { CalendarPage } from "../../src/calendar";
 import { useAuthStore } from "../../src/hooks/useAuthStore";
 import { AppRouter } from "../../src/router/AppRouter";
 
 jest.mock("../../src/hooks/useAuthStore");
+
+jest.mock("../../src/calendar", () => ({
+  CalendarPage: () => <h1>CalendarPage</h1>,
+}));
 
 describe("test in AppRouter", () => {
   const mockcheckAuthToken = jest.fn();
@@ -24,13 +29,27 @@ describe("test in AppRouter", () => {
       status: "not-authenticated",
       checkAuthToken: mockcheckAuthToken,
     });
-    render(
-      <MemoryRouter>
+    const { container } = render(
+      <MemoryRouter initialEntries={["/auth2/algo/otracosa"]}>
         <AppRouter />
       </MemoryRouter>
     );
 
     expect(screen.getByText("Ingreso")).toBeTruthy();
     expect(screen.getByText("Registro")).toBeTruthy();
+    expect(container).toMatchSnapshot();
+  });
+
+  test("must display the Calendar if there is authenticated", () => {
+    useAuthStore.mockReturnValue({
+      status: "authenticated",
+      checkAuthToken: mockcheckAuthToken,
+    });
+    render(
+      <MemoryRouter initialEntries={["/auth2/algo/otracosa"]}>
+        <AppRouter />
+      </MemoryRouter>
+    );
+    expect(screen.getByText("CalendarPage")).toBeTruthy();
   });
 });
