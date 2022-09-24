@@ -28,7 +28,6 @@ describe("test in component <FabDelete />", () => {
     });
     render(<FabDelete />);
 
-    screen.debug();
     const btn = screen.getByLabelText("btn-delete");
 
     expect(btn.style.display).toBe("");
@@ -41,7 +40,6 @@ describe("test in component <FabDelete />", () => {
     });
     render(<FabDelete />);
 
-    screen.debug();
     const btn = screen.getByLabelText("btn-delete");
 
     fireEvent.click(btn);
